@@ -1,9 +1,8 @@
 package com.base.mykotlintest
 
 import android.content.Context
+import android.os.Handler
 import android.util.AttributeSet
-import android.util.Log
-import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.android.synthetic.main.activity_main.view.*
 
@@ -18,6 +17,26 @@ class CountDownController : ConstraintLayout {
         attrs,
         defStyleAttr
     )
+
+    //计时器
+    private val mhandle: Handler = Handler()
+    private var isPause = false //是否暂停
+
+    private var currentSecond: Long = 0 //当前毫秒数
+
+    private val timeRunable: Runnable = object : Runnable {
+        override fun run() {
+            currentSecond = currentSecond + 1000
+            textNumber.text = currentSecond.toString()
+            if (!isPause) {
+                //递归调用本runable对象，实现每隔一秒一次执行任务
+                mhandle.postDelayed(this, 1000)
+            }
+        }
+    }
+
+
+
 
     companion object {
         /**
@@ -41,9 +60,11 @@ class CountDownController : ConstraintLayout {
     public fun start(number: Int) {
 
         //设置进度条颜色
-        progress.setPaintColor("#ffffff")
-        var n = number
-        progress.startDownTime(textNumber, n, OnFinishListener { Log.d("xbase", "finish") })
+//        progress.setPaintColor("#ffffff")
+//        var n = number
+//        progress.startDownTime(textNumber, n, OnFinishListener { Log.d("xbase", "finish") })
+
+        mhandle.postDelayed(timeRunable,1000)
     }
 
     public fun reset(number: Int) {
@@ -51,11 +72,11 @@ class CountDownController : ConstraintLayout {
     }
 
     public fun pause() {
-
+        isPause = true
     }
 
     public fun resume() {
-
+        isPause = false
     }
 
     public fun update(number: Int) {

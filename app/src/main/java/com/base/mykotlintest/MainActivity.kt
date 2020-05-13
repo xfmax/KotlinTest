@@ -11,7 +11,7 @@ class MainActivity : AppCompatActivity() {
         countDownController.enterAnimation();
         buttonStart.setOnClickListener {
             countDownController.type = CountDownController.TYPE_COUNT;
-            countDownController.startTimerSchedule(60.0,60.0)
+            countDownController.startTimerSchedule(60.0,60.0,0.5)
         }
 
         buttonEnd.setOnClickListener {

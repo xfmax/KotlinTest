@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.activity_main.view.*
 import java.math.BigDecimal
 
 
-class CountDownController : ConstraintLayout{
+class CountDownController : ConstraintLayout {
 
     constructor(context: Context) : this(context, null)
 
@@ -58,16 +58,24 @@ class CountDownController : ConstraintLayout{
     private var progressValue: Double = 0.0;
     private var valueUnit: Double = 0.0;
 
-    public fun startTimerSchedule(number: Double,totalTime:Double) {
+    public fun startTimerSchedule(
+        number: Double,
+        totalTime: Double,
+        currentProgressPercentage: Double
+    ) {
         totalNumber = number
         currentNumber = number
         valueUnit = totalTime / number;
         numberPeriod = valueUnit.toLong() * 1000;
-        Log.d("xbase","MUMBER:"+numberPeriod+",valueUnit:"+valueUnit)
+        Log.d("xbase", "MUMBER:" + numberPeriod + ",valueUnit:" + valueUnit)
         pause()
         progress.setPaintColor("#24C789")
         scheduledTimerNumber!!.scheduleAtFixedRate({
-            if (currentNumber <= 0) reset() else progress.startNumberDownTime(textNumber, currentNumber--,type)
+            if (currentNumber <= 0) reset() else progress.startNumberDownTime(
+                textNumber,
+                currentNumber--,
+                type
+            )
         }, DELAY_TIME, numberPeriod)
 
         progressValue = totalTime
@@ -75,10 +83,19 @@ class CountDownController : ConstraintLayout{
             BigDecimal(DateUtils.SECOND_IN_MILLIS)
         )
         scheduledTimerProgress!!.scheduleAtFixedRate({
-            progressValue = BigDecimal(progressValue).minus(timeUnit).setScale(2,BigDecimal.ROUND_HALF_UP).toDouble()
-            val progressPercentage:Double = BigDecimal(progressValue).divide(BigDecimal(totalTime),3, BigDecimal.ROUND_HALF_EVEN).toDouble()
-            Log.d("qq",progressValue.toString()+",totaltime:"+totalTime+","+progressPercentage+",timeUnit:"+timeUnit)
-            if (progressPercentage <= 0) resetProgress() else progress.startProgressDownTime(1-progressPercentage)
+            progressValue =
+                BigDecimal(progressValue).minus(timeUnit).setScale(2, BigDecimal.ROUND_HALF_UP)
+                    .toDouble()
+            val progressPercentage: Double = BigDecimal(progressValue).divide(
+                BigDecimal(totalTime),
+                3,
+                BigDecimal.ROUND_HALF_EVEN
+            ).toDouble()
+            Log.d(
+                "qq",
+                progressValue.toString() + ",totaltime:" + totalTime + "," + progressPercentage + ",timeUnit:" + timeUnit
+            )
+            if (progressPercentage <= 0) resetProgress() else progress.startProgressDownTime(1 - progressPercentage + currentProgressPercentage)
         }, DELAY_TIME, PROGRESS_PERIOD)
     }
 
@@ -110,24 +127,26 @@ class CountDownController : ConstraintLayout{
     public fun resume() {
         progress.setPaintColor("#24C789")
         scheduledTimerNumber!!.scheduleAtFixedRate({
-            progress.startNumberDownTime(textNumber, currentNumber--,type)
+            progress.startNumberDownTime(textNumber, currentNumber--, type)
         }, DELAY_TIME, numberPeriod)
 
         scheduledTimerProgress!!.scheduleAtFixedRate({
-            progressValue = BigDecimal(progressValue).minus(BigDecimal(0.2)).setScale(2,BigDecimal.ROUND_DOWN).toDouble()
+            progressValue =
+                BigDecimal(progressValue).minus(BigDecimal(0.2)).setScale(2, BigDecimal.ROUND_DOWN)
+                    .toDouble()
             val progressPercentage = progressValue / totalNumber;
-            if (progressPercentage <= 0) reset() else progress.startProgressDownTime(1-progressPercentage)
+            if (progressPercentage <= 0) reset() else progress.startProgressDownTime(1 - progressPercentage)
         }, DELAY_TIME, PROGRESS_PERIOD)
     }
 
-    public fun enterAnimation(){
+    public fun enterAnimation() {
         val scaleX = ObjectAnimator.ofFloat(progress, "scaleX", 0f, 1f, 0.9f)
         val scaleY = ObjectAnimator.ofFloat(progress, "scaleY", 0f, 1f, 0.9f)
 
         val animatorSet = AnimatorSet();
         animatorSet.setDuration(400);
         animatorSet.setInterpolator(AccelerateInterpolator());
-        animatorSet.playTogether(scaleX,scaleY);//两个动画同时开始
+        animatorSet.playTogether(scaleX, scaleY);//两个动画同时开始
         animatorSet.start();
     }
 

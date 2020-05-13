@@ -46,6 +46,11 @@ class ProgressView : View {
     private var mMaxProgress = 100f
 
     /**
+     *
+     */
+    private var progressBegin = -90f
+
+    /**
      * 当前进度
      */
     private var mProgress: Double = 0.0
@@ -70,12 +75,12 @@ class ProgressView : View {
         mPaint.color = paintColor
         mPaint.style = Paint.Style.STROKE
         mPaint.strokeWidth = mStrokeWidth.toFloat() * 2;
-        val value = mProgress / mMaxProgress * 360;
+        val value = mProgress * 360;
         mRectFInner.left = mStrokeWidth.toFloat()
         mRectFInner.top = mStrokeWidth.toFloat()
         mRectFInner.right = width - mStrokeWidth.toFloat()
         mRectFInner.bottom = height - mStrokeWidth.toFloat()
-        canvas.drawArc(mRectFInner, -90f, value.toFloat(), false, mPaint)
+        canvas.drawArc(mRectFInner, progressBegin, value.toFloat(), false, mPaint)
 
         //内层背景的白色圆
         mPaint.color = Color.parseColor("#ffffff")
@@ -115,8 +120,8 @@ class ProgressView : View {
     }
 
 
-    fun startProgressDownTime(progressValue: Double) {
-        mProgress = progressValue * mMaxProgress
+    fun startProgressDownTime(progressPercentage: Double) {
+        mProgress = progressPercentage
         this@ProgressView.invalidate()
 
     }

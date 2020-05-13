@@ -8,10 +8,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        countDownController.enterAnimation();
         buttonStart.setOnClickListener {
-            countDownController.type = CountDownController.TYPE_COUNT;
-            countDownController.startTimerSchedule(60.0,60.0)
+            countDownController.type = CountDownController.TYPE_TIME;
+            countDownController.startTimerSchedule(120.0,120.0)
         }
 
         buttonEnd.setOnClickListener {

@@ -107,7 +107,7 @@ class ProgressView : View {
     fun startNumberDownTime(text: TextView, time: Double, type: Int) {
         text.post {
             text.text =
-                if (type == CountDownController.TYPE_TIME) TimeConvertUtils.convertSecondTo0000String(
+                if (type == CountDownController.TYPE_TIME) TimeConvertUtils.convertSecondTo000String(
                     time.toLong(),
                     true
                 ) else time.toInt().toString();

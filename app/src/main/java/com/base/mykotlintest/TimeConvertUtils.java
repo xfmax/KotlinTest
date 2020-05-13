@@ -26,8 +26,8 @@ public class TimeConvertUtils {
      * @param sumSecond 73
      * @param useColon true to return 01:13, false to return 01'13"
      */
-    public static String convertSecondTo0000String(long sumSecond, boolean useColon) {
-        String minuteString = sumSecond / 60 > 9 ? "" + sumSecond / 60 : "0" + sumSecond / 60;
+    public static String convertSecondTo000String(long sumSecond, boolean useColon) {
+        String minuteString =  String.valueOf(sumSecond / 60);
 
         String secondString = sumSecond % 60 > 9 ? "" + sumSecond % 60 : "0" + sumSecond % 60;
 

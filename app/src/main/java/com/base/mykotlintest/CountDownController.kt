@@ -1,13 +1,17 @@
 package com.base.mykotlintest
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.text.format.DateUtils
 import android.util.AttributeSet
 import android.util.Log
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
 import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.android.synthetic.main.activity_main.view.*
 import java.math.BigDecimal
-import java.math.RoundingMode
+
 
 class CountDownController : ConstraintLayout{
 
@@ -54,10 +58,6 @@ class CountDownController : ConstraintLayout{
     private var progressValue: Double = 0.0;
     private var valueUnit: Double = 0.0;
 
-//    private val countTimer: NewCountdownTimerHelper by lazy {
-//        NewCountdownTimerHelper(Int.MAX_VALUE, totalNumber, this, true)
-//    }
-
     public fun startTimerSchedule(number: Double,totalTime:Double) {
         totalNumber = number
         currentNumber = number
@@ -77,20 +77,9 @@ class CountDownController : ConstraintLayout{
             )).setScale(2,BigDecimal.ROUND_DOWN).toDouble()
             val progressPercentage:Double = BigDecimal(progressValue).divide(BigDecimal(totalTime),3, BigDecimal.ROUND_HALF_EVEN).toDouble()
             Log.d("ww",progressValue.toString()+",totaltime:"+totalTime+","+progressPercentage)
-            if (progressPercentage <= 0) resetProgress() else progress.startProgressDownTime(progressPercentage)
+            if (progressPercentage <= 0) resetProgress() else progress.startProgressDownTime(1-progressPercentage)
         }, DELAY_TIME, PROGRESS_PERIOD)
     }
-
-//    public fun start(number: Int) {
-//
-//        //设置进度条颜色
-////        progress.setPaintColor("#ffffff")
-////        var n = number
-////        progress.startDownTime(textNumber, n, OnFinishListener { Log.d("xbase", "finish") })
-//        totalNumber = number
-//        progress.setPaintColor("#24C789")
-//        countTimer.start(0, 200)
-//    }
 
     public fun reset() {
         progress.setPaintColor("#24C789")
@@ -126,8 +115,19 @@ class CountDownController : ConstraintLayout{
         scheduledTimerProgress!!.scheduleAtFixedRate({
             progressValue = BigDecimal(progressValue).minus(BigDecimal(0.2)).setScale(2,BigDecimal.ROUND_DOWN).toDouble()
             val progressPercentage = progressValue / totalNumber;
-            if (progressPercentage <= 0) reset() else progress.startProgressDownTime(progressPercentage)
+            if (progressPercentage <= 0) reset() else progress.startProgressDownTime(1-progressPercentage)
         }, DELAY_TIME, PROGRESS_PERIOD)
+    }
+
+    public fun enterAnimation(){
+        val scaleX = ObjectAnimator.ofFloat(progress, "scaleX", 0f, 1f, 0.9f)
+        val scaleY = ObjectAnimator.ofFloat(progress, "scaleY", 0f, 1f, 0.9f)
+
+        val animatorSet = AnimatorSet();
+        animatorSet.setDuration(400);
+        animatorSet.setInterpolator(AccelerateInterpolator());
+        animatorSet.playTogether(scaleX,scaleY);//两个动画同时开始
+        animatorSet.start();
     }
 
 }

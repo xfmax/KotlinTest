@@ -11,7 +11,7 @@ class MainActivity : AppCompatActivity() {
 
         buttonStart.setOnClickListener {
             countDownController.type = CountDownController.TYPE_COUNT;
-            countDownController.startTimerSchedule(120.0,120.0)
+            countDownController.startTimerSchedule(60.0,60.0)
         }
 
         buttonEnd.setOnClickListener {

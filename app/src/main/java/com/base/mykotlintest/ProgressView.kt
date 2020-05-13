@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 
@@ -52,19 +51,11 @@ class ProgressView : View {
     private var mProgress: Double = 0.0
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        var width = this.width
-        var height = this.height
-        if (width != height) {
-            val min = Math.min(width, height)
-            width = min
-            height = min
-        }
 
-        //位置
-        mRectF.left = mStrokeWidth / 2.toFloat()
-        mRectF.top = mStrokeWidth / 2.toFloat()
-        mRectF.right = width - mStrokeWidth / 2.toFloat()
-        mRectF.bottom = height - mStrokeWidth / 2.toFloat()
+        // 画最外层的背景大圆
+        val centre = width / 2 //获取圆心的x坐标
+
+        val radius: Int = centre
 
         //设置画布为透明
         canvas.drawColor(Color.TRANSPARENT)
@@ -72,24 +63,30 @@ class ProgressView : View {
         //画个半透明的圆当背景
         mPaint.color = Color.parseColor("#20000000")
         mPaint.style = Paint.Style.FILL
-        canvas.drawOval(mRectF, mPaint)
+        canvas.drawCircle(centre.toFloat(), centre.toFloat(), radius.toFloat(), mPaint) //画出圆环
 
         //进度条绘制
         mPaint.isAntiAlias = true
         mPaint.color = paintColor
         mPaint.style = Paint.Style.STROKE
-        mPaint.strokeWidth = mStrokeWidth.toFloat();
+        mPaint.strokeWidth = mStrokeWidth.toFloat() * 2;
         val value = mProgress / mMaxProgress * 360;
-        canvas.drawArc(mRectF, -90f, value.toFloat(), true, mPaint)
-
-        //内层的白色圆
         mRectFInner.left = mStrokeWidth.toFloat()
         mRectFInner.top = mStrokeWidth.toFloat()
         mRectFInner.right = width - mStrokeWidth.toFloat()
         mRectFInner.bottom = height - mStrokeWidth.toFloat()
+        canvas.drawArc(mRectFInner, -90f, value.toFloat(), false, mPaint)
+
+        //内层背景的白色圆
         mPaint.color = Color.parseColor("#ffffff")
         mPaint.style = Paint.Style.FILL
-        canvas.drawOval(mRectFInner, mPaint)
+        canvas.drawCircle(
+            centre.toFloat(),
+            centre.toFloat(),
+            (radius - mStrokeWidth).toFloat(),
+            mPaint
+        )
+
     }
 
     /**
@@ -107,8 +104,14 @@ class ProgressView : View {
     }
 
 
-    fun startNumberDownTime(text: TextView, time: Double,type:Int) {
-        text.post { text.text = if(type == CountDownController.TYPE_TIME) TimeConvertUtils.convertSecondTo0000String(time.toLong(), true) else time.toInt().toString(); }
+    fun startNumberDownTime(text: TextView, time: Double, type: Int) {
+        text.post {
+            text.text =
+                if (type == CountDownController.TYPE_TIME) TimeConvertUtils.convertSecondTo0000String(
+                    time.toLong(),
+                    true
+                ) else time.toInt().toString();
+        }
     }
 
 

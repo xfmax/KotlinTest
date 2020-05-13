@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.android.synthetic.main.activity_main.view.*
 import java.math.BigDecimal
+import java.math.RoundingMode
 
 class CountDownController : ConstraintLayout{
 
@@ -69,14 +70,14 @@ class CountDownController : ConstraintLayout{
             if (currentNumber <= 0) reset() else progress.startNumberDownTime(textNumber, currentNumber--,type)
         }, DELAY_TIME, numberPeriod)
 
-        progressValue = totalTime;
+        progressValue = totalTime
         scheduledTimerProgress!!.scheduleAtFixedRate({
             progressValue = BigDecimal(progressValue).minus(BigDecimal(PROGRESS_PERIOD).divide(
                 BigDecimal(DateUtils.SECOND_IN_MILLIS)
             )).setScale(2,BigDecimal.ROUND_DOWN).toDouble()
-            val progressPercentage = progressValue / totalTime;
-            Log.d("ww",progressValue.toString()+",totaltime:"+totalTime)
-            if (progressPercentage <= 0) reset() else progress.startProgressDownTime(progressPercentage)
+            val progressPercentage:Double = BigDecimal(progressValue).divide(BigDecimal(totalTime),3, BigDecimal.ROUND_HALF_EVEN).toDouble()
+            Log.d("ww",progressValue.toString()+",totaltime:"+totalTime+","+progressPercentage)
+            if (progressPercentage <= 0) resetProgress() else progress.startProgressDownTime(progressPercentage)
         }, DELAY_TIME, PROGRESS_PERIOD)
     }
 
@@ -98,6 +99,16 @@ class CountDownController : ConstraintLayout{
         progressValue = 0.0
         currentNumber = totalNumber
         scheduledTimerNumber!!.cancel()
+        scheduledTimerProgress!!.cancel()
+    }
+
+    public fun resetProgress() {
+        progress.setPaintColor("#24C789")
+        progress.reset()
+//        textNumber.text = ""
+        progressValue = 0.0
+//        currentNumber = totalNumber
+//        scheduledTimerNumber!!.cancel()
         scheduledTimerProgress!!.cancel()
     }
 

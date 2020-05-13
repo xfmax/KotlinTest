@@ -33,6 +33,7 @@ class CountDownController : ConstraintLayout, NewCountdownTimerHelper.OnCountdow
     }
 
     private val DELAY_TIME: Long = 0
+    private val PROGRESS_PERIOD: Long = 200
     private val type: Int? = null;
 
     private var scheduledTimerNumber: ScheduledTimer? = null
@@ -48,6 +49,7 @@ class CountDownController : ConstraintLayout, NewCountdownTimerHelper.OnCountdow
      */
     private var totalNumber: Double = 0.0;
     private var currentNumber: Double = 0.0;
+    private var progressValue: Double = 0.0;
 
 //    private val countTimer: NewCountdownTimerHelper by lazy {
 //        NewCountdownTimerHelper(Int.MAX_VALUE, totalNumber, this, true)
@@ -61,12 +63,14 @@ class CountDownController : ConstraintLayout, NewCountdownTimerHelper.OnCountdow
         scheduledTimerNumber!!.scheduleAtFixedRate({
             progress.startNumberDownTime(textNumber, currentNumber--)
         }, DELAY_TIME, DateUtils.SECOND_IN_MILLIS)
-        var value = currentNumber
+
+        progressValue = currentNumber;
         scheduledTimerProgress!!.scheduleAtFixedRate({
-            value = BigDecimal(value).minus(BigDecimal(0.2)).setScale(2,BigDecimal.ROUND_DOWN).toDouble()
-            Log.d("ww",","+value.toString())
-            progress.startProgressDownTime(value, totalNumber)
-        }, DELAY_TIME, 200)
+            progressValue = BigDecimal(progressValue).minus(BigDecimal(0.2)).setScale(2,BigDecimal.ROUND_DOWN).toDouble()
+            Log.d("ww",","+progressValue.toString())
+            val progressPercentage = progressValue / totalNumber;
+            if (progressPercentage <= 0) reset() else progress.startProgressDownTime(progressPercentage)
+        }, DELAY_TIME, PROGRESS_PERIOD)
     }
 
 //    public fun start(number: Int) {
@@ -84,6 +88,7 @@ class CountDownController : ConstraintLayout, NewCountdownTimerHelper.OnCountdow
         progress.setPaintColor("#24C789")
         progress.reset()
         textNumber.text = ""
+        progressValue = 0.0
         currentNumber = totalNumber
         scheduledTimerNumber!!.cancel()
         scheduledTimerProgress!!.cancel()
@@ -95,14 +100,16 @@ class CountDownController : ConstraintLayout, NewCountdownTimerHelper.OnCountdow
     }
 
     public fun resume() {
-//        progress.setPaintColor("#24C789")
-//        scheduledTimerNumber!!.scheduleAtFixedRate({
-//            progress.startNumberDownTime(textNumber, currentNumber--)
-//        }, DateUtils.SECOND_IN_MILLIS, DateUtils.SECOND_IN_MILLIS)
-//
-//        scheduledTimerProgress!!.scheduleAtFixedRate({
-//            progress.startProgressDownTime( currentNumber--, totalNumber)
-//        }, DateUtils.SECOND_IN_MILLIS, DateUtils.SECOND_IN_MILLIS)
+        progress.setPaintColor("#24C789")
+        scheduledTimerNumber!!.scheduleAtFixedRate({
+            progress.startNumberDownTime(textNumber, currentNumber--)
+        }, DateUtils.SECOND_IN_MILLIS, DateUtils.SECOND_IN_MILLIS)
+
+        scheduledTimerProgress!!.scheduleAtFixedRate({
+            progressValue = BigDecimal(progressValue).minus(BigDecimal(0.2)).setScale(2,BigDecimal.ROUND_DOWN).toDouble()
+            val progressPercentage = progressValue / totalNumber;
+            if (progressPercentage <= 0) reset() else progress.startProgressDownTime(progressPercentage)
+        }, DELAY_TIME, PROGRESS_PERIOD)
     }
 
     override fun onCountdown(index: Int) {

@@ -110,13 +110,10 @@ class ProgressView : View {
         text.post { text.text = time.toString(); }
     }
 
-    fun startProgressDownTime(time: Double, totaltime: Double) {
-        Log.d(
-            "xbase",
-            "time:" + time + ",totalTime:" + totaltime + ",mProgresss:" + mProgress.toString()
-        )
-        mProgress = time / totaltime * mMaxProgress
+    fun startProgressDownTime(progressValue:Double) {
+        mProgress = progressValue * mMaxProgress
         this@ProgressView.invalidate()
+
     }
 
     init {

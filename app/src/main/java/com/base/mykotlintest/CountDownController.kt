@@ -71,12 +71,13 @@ class CountDownController : ConstraintLayout{
         }, DELAY_TIME, numberPeriod)
 
         progressValue = totalTime
+        val timeUnit = BigDecimal(PROGRESS_PERIOD).divide(
+            BigDecimal(DateUtils.SECOND_IN_MILLIS)
+        )
         scheduledTimerProgress!!.scheduleAtFixedRate({
-            progressValue = BigDecimal(progressValue).minus(BigDecimal(PROGRESS_PERIOD).divide(
-                BigDecimal(DateUtils.SECOND_IN_MILLIS)
-            )).setScale(2,BigDecimal.ROUND_DOWN).toDouble()
+            progressValue = BigDecimal(progressValue).minus(timeUnit).setScale(2,BigDecimal.ROUND_HALF_UP).toDouble()
             val progressPercentage:Double = BigDecimal(progressValue).divide(BigDecimal(totalTime),3, BigDecimal.ROUND_HALF_EVEN).toDouble()
-            Log.d("ww",progressValue.toString()+",totaltime:"+totalTime+","+progressPercentage)
+            Log.d("qq",progressValue.toString()+",totaltime:"+totalTime+","+progressPercentage+",timeUnit:"+timeUnit)
             if (progressPercentage <= 0) resetProgress() else progress.startProgressDownTime(1-progressPercentage)
         }, DELAY_TIME, PROGRESS_PERIOD)
     }

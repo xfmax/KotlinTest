@@ -94,26 +94,30 @@ class ProgressView : View {
      *
      * @param time 倒计时时间 毫秒值
      */
-    fun startDownTime(text: TextView, time: Int, listener: OnFinishListener?) {
-        mMaxProgress = 100f
-        var n = time;
-        Thread(Runnable {
-            for (i in 0..mMaxProgress.toInt()) {
-                try {
-                    Thread.sleep((time / mMaxProgress).toLong())
-                    //当倒计时结束时通知
-                    if (i == 100 && listener != null) {
-                        post { listener.onFinish() }
-                    }
-                } catch (e: InterruptedException) {
-                    e.printStackTrace()
-                }
-                mProgress = i.toFloat()
-                n -= (time / mMaxProgress).toInt();
-                text.post { text.text = n.toString();}
-                this@ProgressView.postInvalidate()
-            }
-        }).start()
+    fun startDownTime(text: TextView, time: Int, totaltime: Int, listener: OnFinishListener?) {
+//        mMaxProgress = 100f
+//        var n = time;
+//        Thread(Runnable {
+//            for (i in 0..mMaxProgress.toInt()) {
+//                try {
+//                    Thread.sleep((time / mMaxProgress).toLong())
+//                    //当倒计时结束时通知
+//                    if (i == 100 && listener != null) {
+//                        post { listener.onFinish() }
+//                    }
+//                } catch (e: InterruptedException) {
+//                    e.printStackTrace()
+//                }
+//                mProgress = i.toFloat()
+//                n -= (time / mMaxProgress).toInt();
+//                text.post { text.text = n.toString();}
+//                this@ProgressView.postInvalidate()
+//            }
+//        }).start()
+        mProgress = (time / totaltime * 100).toFloat();
+        this@ProgressView.invalidate()
+        text.post { text.text = time.toString(); }
+
     }
 
     init {

@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         buttonStart.setOnClickListener {
-            countDownController.start(3500)
+            countDownController.start(10)
         }
 
         buttonEnd.setOnClickListener {
@@ -24,6 +24,11 @@ class MainActivity : AppCompatActivity() {
                 countDownController.resume()
                 buttonEnd.text = "END"
             }
+        }
+
+
+        buttonReset.setOnClickListener {
+            countDownController.reset()
         }
     }
 

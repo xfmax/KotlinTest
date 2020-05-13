@@ -23,7 +23,7 @@
             android:id="@+id/textNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="跳过"
+            android:text=""
             app:layout_constraintLeft_toLeftOf="@+id/progress"
             app:layout_constraintRight_toRightOf="@+id/progress"
             app:layout_constraintTop_toTopOf="@+id/progress"
@@ -45,4 +45,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="END"/>
+
+    <Button
+        android:id="@+id/buttonReset"
+        android:layout_below="@+id/buttonEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="RESET"/>
 </RelativeLayout>

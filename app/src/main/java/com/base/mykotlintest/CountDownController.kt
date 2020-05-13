@@ -3,10 +3,11 @@ package com.base.mykotlintest
 import android.content.Context
 import android.os.Handler
 import android.util.AttributeSet
+import android.util.Log
 import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.android.synthetic.main.activity_main.view.*
 
-class CountDownController : ConstraintLayout {
+class CountDownController : ConstraintLayout, NewCountdownTimerHelper.OnCountdownTimerCallback {
 
     constructor(context: Context) : this(context, null)
 
@@ -17,26 +18,6 @@ class CountDownController : ConstraintLayout {
         attrs,
         defStyleAttr
     )
-
-    //计时器
-    private val mhandle: Handler = Handler()
-    private var isPause = false //是否暂停
-
-    private var currentSecond: Long = 0 //当前毫秒数
-
-    private val timeRunable: Runnable = object : Runnable {
-        override fun run() {
-            currentSecond = currentSecond + 1000
-            textNumber.text = currentSecond.toString()
-            if (!isPause) {
-                //递归调用本runable对象，实现每隔一秒一次执行任务
-                mhandle.postDelayed(this, 1000)
-            }
-        }
-    }
-
-
-
 
     companion object {
         /**
@@ -55,7 +36,11 @@ class CountDownController : ConstraintLayout {
     /**
      * 当前的数值（倒计次数 or 倒计时数）
      */
-    private val currentNumber: Int = 0;
+    private var totalNumber: Int = 0;
+
+    private val countTimer: NewCountdownTimerHelper by lazy {
+        NewCountdownTimerHelper(Int.MAX_VALUE, totalNumber, this, true)
+    }
 
     public fun start(number: Int) {
 
@@ -63,23 +48,30 @@ class CountDownController : ConstraintLayout {
 //        progress.setPaintColor("#ffffff")
 //        var n = number
 //        progress.startDownTime(textNumber, n, OnFinishListener { Log.d("xbase", "finish") })
+        totalNumber = number
 
-        mhandle.postDelayed(timeRunable,1000)
+        countTimer.start(0, 1000)
     }
 
-    public fun reset(number: Int) {
-
+    public fun reset() {
+        countTimer.reset()
     }
 
     public fun pause() {
-        isPause = true
+        countTimer.pause()
     }
 
     public fun resume() {
-        isPause = false
+        countTimer.resume()
     }
 
-    public fun update(number: Int) {
+    override fun onCountdown(index: Int) {
+        Log.d("xbase", index.toString())
+        progress.startDownTime(textNumber,index,totalNumber,null)
+    }
+
+    override fun onComplete() {
+        Log.d("xbase", "Complete")
     }
 
 }

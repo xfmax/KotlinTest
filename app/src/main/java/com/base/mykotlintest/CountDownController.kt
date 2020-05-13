@@ -8,7 +8,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.android.synthetic.main.activity_main.view.*
 import java.math.BigDecimal
 
-class CountDownController : ConstraintLayout, NewCountdownTimerHelper.OnCountdownTimerCallback {
+class CountDownController : ConstraintLayout{
 
     constructor(context: Context) : this(context, null)
 
@@ -29,12 +29,13 @@ class CountDownController : ConstraintLayout, NewCountdownTimerHelper.OnCountdow
         /**
          * 计次类型
          */
-        const val TYPE_COUNT: Int = 0;
+        const val TYPE_COUNT: Int = 1;
     }
 
     private val DELAY_TIME: Long = 0
     private val PROGRESS_PERIOD: Long = 200
-    private val type: Int? = null;
+    private var numberPeriod: Long = DateUtils.SECOND_IN_MILLIS
+    public var type: Int = 0
 
     private var scheduledTimerNumber: ScheduledTimer? = null
     private var scheduledTimerProgress: ScheduledTimer? = null
@@ -50,25 +51,31 @@ class CountDownController : ConstraintLayout, NewCountdownTimerHelper.OnCountdow
     private var totalNumber: Double = 0.0;
     private var currentNumber: Double = 0.0;
     private var progressValue: Double = 0.0;
+    private var valueUnit: Double = 0.0;
 
 //    private val countTimer: NewCountdownTimerHelper by lazy {
 //        NewCountdownTimerHelper(Int.MAX_VALUE, totalNumber, this, true)
 //    }
 
-    public fun startTimerSchedule(number: Double) {
+    public fun startTimerSchedule(number: Double,totalTime:Double) {
         totalNumber = number
         currentNumber = number
+        valueUnit = totalTime / number;
+        numberPeriod = valueUnit.toLong() * 1000;
+        Log.d("xbase","MUMBER:"+numberPeriod+",valueUnit:"+valueUnit)
         pause()
         progress.setPaintColor("#24C789")
         scheduledTimerNumber!!.scheduleAtFixedRate({
-            progress.startNumberDownTime(textNumber, currentNumber--)
-        }, DELAY_TIME, DateUtils.SECOND_IN_MILLIS)
+            if (currentNumber <= 0) reset() else progress.startNumberDownTime(textNumber, currentNumber--,type)
+        }, DELAY_TIME, numberPeriod)
 
-        progressValue = currentNumber;
+        progressValue = totalTime;
         scheduledTimerProgress!!.scheduleAtFixedRate({
-            progressValue = BigDecimal(progressValue).minus(BigDecimal(0.2)).setScale(2,BigDecimal.ROUND_DOWN).toDouble()
-            Log.d("ww",","+progressValue.toString())
-            val progressPercentage = progressValue / totalNumber;
+            progressValue = BigDecimal(progressValue).minus(BigDecimal(PROGRESS_PERIOD).divide(
+                BigDecimal(DateUtils.SECOND_IN_MILLIS)
+            )).setScale(2,BigDecimal.ROUND_DOWN).toDouble()
+            val progressPercentage = progressValue / totalTime;
+            Log.d("ww",progressValue.toString()+",totaltime:"+totalTime)
             if (progressPercentage <= 0) reset() else progress.startProgressDownTime(progressPercentage)
         }, DELAY_TIME, PROGRESS_PERIOD)
     }
@@ -102,23 +109,14 @@ class CountDownController : ConstraintLayout, NewCountdownTimerHelper.OnCountdow
     public fun resume() {
         progress.setPaintColor("#24C789")
         scheduledTimerNumber!!.scheduleAtFixedRate({
-            progress.startNumberDownTime(textNumber, currentNumber--)
-        }, DateUtils.SECOND_IN_MILLIS, DateUtils.SECOND_IN_MILLIS)
+            progress.startNumberDownTime(textNumber, currentNumber--,type)
+        }, DELAY_TIME, numberPeriod)
 
         scheduledTimerProgress!!.scheduleAtFixedRate({
             progressValue = BigDecimal(progressValue).minus(BigDecimal(0.2)).setScale(2,BigDecimal.ROUND_DOWN).toDouble()
             val progressPercentage = progressValue / totalNumber;
             if (progressPercentage <= 0) reset() else progress.startProgressDownTime(progressPercentage)
         }, DELAY_TIME, PROGRESS_PERIOD)
-    }
-
-    override fun onCountdown(index: Int) {
-        Log.d("xbase", index.toString())
-//        progress.startDownTime(textNumber, index, totalNumber)
-    }
-
-    override fun onComplete() {
-        Log.d("xbase", "Complete")
     }
 
 }

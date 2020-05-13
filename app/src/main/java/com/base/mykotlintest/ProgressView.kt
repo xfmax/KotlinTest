@@ -13,6 +13,7 @@ import android.widget.TextView
 /**
  * 圆形倒计时进度条
  *
+ * @author sufeng
  */
 class ProgressView : View {
 
@@ -106,11 +107,12 @@ class ProgressView : View {
     }
 
 
-    fun startNumberDownTime(text: TextView, time: Double) {
-        text.post { text.text = time.toString(); }
+    fun startNumberDownTime(text: TextView, time: Double,type:Int) {
+        text.post { text.text = if(type == CountDownController.TYPE_TIME) TimeConvertUtils.convertSecondTo0000String(time.toLong(), true) else time.toInt().toString(); }
     }
 
-    fun startProgressDownTime(progressValue:Double) {
+
+    fun startProgressDownTime(progressValue: Double) {
         mProgress = progressValue * mMaxProgress
         this@ProgressView.invalidate()
 

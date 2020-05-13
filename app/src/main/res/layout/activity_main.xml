@@ -8,8 +8,8 @@
 
     <com.base.mykotlintest.CountDownController
         android:id="@+id/countDownController"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_alignParentEnd="true"
         android:layout_margin="12dp">
 
@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             />
 
-        <TextView
+       <!-- <TextView
             android:id="@+id/textNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,7 +29,19 @@
             app:layout_constraintTop_toTopOf="@+id/progress"
             app:layout_constraintBottom_toBottomOf="@+id/progress"
             android:textColor="#584F60"
-            android:textSize="13sp"/>
+            android:textSize="20sp"/>-->
+
+        <com.base.mykotlintest.KeepFontTextView
+            android:id="@+id/textNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#584F60"
+            app:layout_constraintLeft_toLeftOf="@+id/progress"
+            app:layout_constraintRight_toRightOf="@+id/progress"
+            app:layout_constraintTop_toTopOf="@+id/progress"
+            app:layout_constraintBottom_toBottomOf="@+id/progress"
+            android:textSize="20dp"
+            tools:text="7" />
     </com.base.mykotlintest.CountDownController>
 
 

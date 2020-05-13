@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         buttonStart.setOnClickListener {
-            countDownController.start(10)
+            countDownController.startTimerSchedule(10.0)
         }
 
         buttonEnd.setOnClickListener {

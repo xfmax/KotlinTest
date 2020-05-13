@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 
@@ -26,6 +27,7 @@ class ProgressView : View {
     )
 
     private val mRectF: RectF
+    private val mRectFInner: RectF
     private val mPaint: Paint
 
     /**
@@ -46,7 +48,7 @@ class ProgressView : View {
     /**
      * 当前进度
      */
-    private var mProgress = 0f
+    private var mProgress: Double = 0.0
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         var width = this.width
@@ -67,17 +69,26 @@ class ProgressView : View {
         canvas.drawColor(Color.TRANSPARENT)
 
         //画个半透明的圆当背景
-        mPaint.color = Color.parseColor("#33000000")
+        mPaint.color = Color.parseColor("#20000000")
         mPaint.style = Paint.Style.FILL
         canvas.drawOval(mRectF, mPaint)
 
-
-        //设置画笔
+        //进度条绘制
         mPaint.isAntiAlias = true
         mPaint.color = paintColor
         mPaint.style = Paint.Style.STROKE
-        mPaint.strokeWidth = mStrokeWidth.toFloat()
-        canvas.drawArc(mRectF, -90f, mProgress / mMaxProgress * 360, false, mPaint)
+        mPaint.strokeWidth = mStrokeWidth.toFloat();
+        val value = mProgress / mMaxProgress * 360;
+        canvas.drawArc(mRectF, -90f, value.toFloat(), true, mPaint)
+
+        //内层的白色圆
+        mRectFInner.left = mStrokeWidth.toFloat()
+        mRectFInner.top = mStrokeWidth.toFloat()
+        mRectFInner.right = width - mStrokeWidth.toFloat()
+        mRectFInner.bottom = height - mStrokeWidth.toFloat()
+        mPaint.color = Color.parseColor("#ffffff")
+        mPaint.style = Paint.Style.FILL
+        canvas.drawOval(mRectFInner, mPaint)
     }
 
     /**
@@ -89,39 +100,28 @@ class ProgressView : View {
         paintColor = Color.parseColor(color)
     }
 
-    /**
-     * 设置到最大进度的时间
-     *
-     * @param time 倒计时时间 毫秒值
-     */
-    fun startDownTime(text: TextView, time: Int, totaltime: Int, listener: OnFinishListener?) {
-//        mMaxProgress = 100f
-//        var n = time;
-//        Thread(Runnable {
-//            for (i in 0..mMaxProgress.toInt()) {
-//                try {
-//                    Thread.sleep((time / mMaxProgress).toLong())
-//                    //当倒计时结束时通知
-//                    if (i == 100 && listener != null) {
-//                        post { listener.onFinish() }
-//                    }
-//                } catch (e: InterruptedException) {
-//                    e.printStackTrace()
-//                }
-//                mProgress = i.toFloat()
-//                n -= (time / mMaxProgress).toInt();
-//                text.post { text.text = n.toString();}
-//                this@ProgressView.postInvalidate()
-//            }
-//        }).start()
-        mProgress = (time / totaltime * 100).toFloat();
-        this@ProgressView.invalidate()
-        text.post { text.text = time.toString(); }
+    fun reset() {
+        mProgress = 0.0
+        postInvalidate()
+    }
 
+
+    fun startNumberDownTime(text: TextView, time: Double) {
+        text.post { text.text = time.toString(); }
+    }
+
+    fun startProgressDownTime(time: Double, totaltime: Double) {
+        Log.d(
+            "xbase",
+            "time:" + time + ",totalTime:" + totaltime + ",mProgresss:" + mProgress.toString()
+        )
+        mProgress = time / totaltime * mMaxProgress
+        this@ProgressView.invalidate()
     }
 
     init {
         mRectF = RectF()
+        mRectFInner = RectF()
         mPaint = Paint()
     }
 }

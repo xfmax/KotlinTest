@@ -61,7 +61,7 @@ public class NewCountdownTimerHelper {
                     index++;
                 }
             }else{
-                if (index <= 0) {
+                if (index < 0) {
                     completeCall = true;
                     onComplete();
                 } else {

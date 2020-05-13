@@ -28,7 +28,7 @@
             app:layout_constraintRight_toRightOf="@+id/progress"
             app:layout_constraintTop_toTopOf="@+id/progress"
             app:layout_constraintBottom_toBottomOf="@+id/progress"
-            android:textColor="#fff"
+            android:textColor="#584F60"
             android:textSize="13sp"/>
     </com.base.mykotlintest.CountDownController>
 

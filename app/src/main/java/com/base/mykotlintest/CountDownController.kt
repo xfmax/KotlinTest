@@ -38,7 +38,7 @@ class CountDownController : ConstraintLayout {
     }
 
     private val DELAY_TIME: Long = 0
-    private val PROGRESS_PERIOD: Long = 200
+    private var PROGRESS_PERIOD: Long = 200
     private var numberPeriod: Long = DateUtils.SECOND_IN_MILLIS
     public var type: Int = 0
 
@@ -65,8 +65,9 @@ class CountDownController : ConstraintLayout {
     ) {
         totalNumber = number
         currentNumber = number
-        valueUnit = totalTime / number;
-        numberPeriod = valueUnit.toLong() * 1000;
+        valueUnit = BigDecimal(totalTime).multiply(BigDecimal(currentProgressPercentage)).divide(BigDecimal(number), 3,
+            BigDecimal.ROUND_HALF_EVEN).toDouble() ;
+        numberPeriod = (valueUnit * 1000).toLong();
         Log.d("xbase", "MUMBER:" + numberPeriod + ",valueUnit:" + valueUnit)
         pause()
         progress.setPaintColor("#24C789")
@@ -78,16 +79,15 @@ class CountDownController : ConstraintLayout {
             )
         }, DELAY_TIME, numberPeriod)
 
-        progressValue = totalTime
-        val timeUnit = BigDecimal(PROGRESS_PERIOD).divide(
-            BigDecimal(DateUtils.SECOND_IN_MILLIS)
-        )
+        progressValue = currentNumber
+        val timeUnit = BigDecimal(valueUnit).multiply(BigDecimal(0.2))
+        PROGRESS_PERIOD = (timeUnit.multiply(BigDecimal(1000.0))).toLong()
         scheduledTimerProgress!!.scheduleAtFixedRate({
             progressValue =
                 BigDecimal(progressValue).minus(timeUnit).setScale(2, BigDecimal.ROUND_HALF_UP)
                     .toDouble()
             val progressPercentage: Double = BigDecimal(progressValue).divide(
-                BigDecimal(totalTime),
+                BigDecimal(number)/*.multiply(BigDecimal(currentProgressPercentage))*/,
                 3,
                 BigDecimal.ROUND_HALF_EVEN
             ).toDouble()
@@ -95,7 +95,7 @@ class CountDownController : ConstraintLayout {
                 "qq",
                 progressValue.toString() + ",totaltime:" + totalTime + "," + progressPercentage + ",timeUnit:" + timeUnit
             )
-            if (progressPercentage <= 0) resetProgress() else progress.startProgressDownTime(1 - progressPercentage + currentProgressPercentage)
+            if (progressPercentage <= 0) resetProgress() else progress.startProgressDownTime((1 - progressPercentage) /** currentProgressPercentage + currentProgressPercentage*/)
         }, DELAY_TIME, PROGRESS_PERIOD)
     }
 

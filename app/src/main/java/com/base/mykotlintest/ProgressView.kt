@@ -8,6 +8,8 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
 import android.widget.TextView
+import java.math.BigDecimal
+import kotlin.math.ceil
 
 /**
  * 圆形倒计时进度条
@@ -33,7 +35,7 @@ class ProgressView : View {
     /**
      * 画笔颜色
      */
-    private var paintColor = 0
+    private var paintColor = Color.parseColor("#24C789")
 
     /**
      * 进度条圆弧宽度
@@ -124,6 +126,19 @@ class ProgressView : View {
         mProgress = progressPercentage
         this@ProgressView.invalidate()
 
+    }
+
+    fun updateProgressAndNumber(text: TextView, number: Double, progressPercentage: Double,type: Int){
+        text.post {
+            text.text =
+                if (type == CountDownController.TYPE_TIME) TimeConvertUtils.convertSecondTo000String(
+                    number.toLong(),
+                    true
+                ) else ceil(number).toInt().toString()
+        }
+
+        mProgress = progressPercentage
+        this@ProgressView.invalidate()
     }
 
     init {

@@ -65,8 +65,10 @@ class CountDownController : ConstraintLayout {
     ) {
         totalNumber = number
         currentNumber = number
-        valueUnit = BigDecimal(totalTime).multiply(BigDecimal(currentProgressPercentage)).divide(BigDecimal(number), 3,
-            BigDecimal.ROUND_HALF_EVEN).toDouble() ;
+        valueUnit = BigDecimal(totalTime).multiply(BigDecimal(currentProgressPercentage)).divide(
+            BigDecimal(number), 3,
+            BigDecimal.ROUND_HALF_EVEN
+        ).toDouble();
         numberPeriod = (valueUnit * 1000).toLong();
         Log.d("xbase", "MUMBER:" + numberPeriod + ",valueUnit:" + valueUnit)
         pause()
@@ -95,8 +97,31 @@ class CountDownController : ConstraintLayout {
                 "qq",
                 progressValue.toString() + ",totaltime:" + totalTime + "," + progressPercentage + ",timeUnit:" + timeUnit
             )
-            if (progressPercentage <= 0) resetProgress() else progress.startProgressDownTime((1 - progressPercentage) /** currentProgressPercentage + currentProgressPercentage*/)
+            if (progressPercentage <= 0) resetProgress() else progress.startProgressDownTime(
+                (1 - progressPercentage)
+                /** currentProgressPercentage + currentProgressPercentage*/
+            )
         }, DELAY_TIME, PROGRESS_PERIOD)
+    }
+
+    public fun updateStepProgress(
+        number: Double,
+        currentTime: Double,
+        position: Double,
+        totalDuration: Double
+    ) {
+        val progressPercentage = BigDecimal(currentTime).minus(BigDecimal(position))
+            .setScale(2, BigDecimal.ROUND_HALF_UP).divide(
+                BigDecimal(totalDuration), 3, BigDecimal.ROUND_HALF_EVEN
+            )
+        val currentNumber = BigDecimal(number).multiply(BigDecimal(1.0).minus(progressPercentage))
+        Log.d("xbase", "progressPercentage:$progressPercentage,$currentNumber")
+        progress.updateProgressAndNumber(
+            textNumber,
+            currentNumber.toDouble(),
+            progressPercentage.toDouble(),
+            type
+        )
     }
 
     public fun reset() {

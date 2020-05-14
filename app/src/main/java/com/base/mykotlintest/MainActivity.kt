@@ -9,9 +9,20 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         countDownController.enterAnimation();
+        var currentTimer = 20.0
+        var poisition = 20.0
+        var totalDuration = 10.0
         buttonStart.setOnClickListener {
-            countDownController.type = CountDownController.TYPE_COUNT;
-            countDownController.startTimerSchedule(30.0,100.0,100 / 100.toDouble())
+            countDownController.type = CountDownController.TYPE_TIME;
+//            countDownController.startTimerSchedule(30.0,100.0,100 / 100.toDouble())
+            Thread {
+                while (true){
+                    Thread.sleep(200)
+                    countDownController.updateStepProgress(totalDuration,currentTimer,poisition,totalDuration)
+                    currentTimer += 0.2
+                }
+            }.start()
+
         }
 
         buttonEnd.setOnClickListener {

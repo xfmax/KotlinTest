@@ -19,7 +19,9 @@ import java.util.TimeZone;
  * @author jackrex
  */
 public class TimeConvertUtils {
-    private int a;
+
+    private int c;
+
     /**
      * covert 73 to 01:13 or 01'13"
      *

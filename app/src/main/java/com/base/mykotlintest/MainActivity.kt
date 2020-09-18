@@ -8,6 +8,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val a = 0
+        val b = 0
 //        setContentView(R.layout.activity_main)
 //        countDownController.enterAnimation();
 //        var currentTimer = 20.0

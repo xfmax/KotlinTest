@@ -1,0 +1,12 @@
+
+\
+java:S2184ı"@Cast one of the operands of this integer division to a "double".(ø ıÅùÿÿÿÿ
+b
+java:S1301¨"KReplace this "switch" statement by "if" statements to increase readability.(ŠÇâ
+b
+java:S1301¿"KReplace this "switch" statement by "if" statements to increase readability.(ŠÇâ
+V
+java:S1117ô"?Rename "circleColor" which hides the field declared at line 32.(Æ´™±
+R	java:S125‹"<This block of commented-out lines of code should be removed.(À¶È©
+]
+java:S2184ñ"ACast one of the operands of this division operation to a "float".(õ»ãßùÿÿÿÿ

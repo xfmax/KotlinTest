@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,36 +11,38 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_alignParentEnd="true"
-        android:layout_margin="12dp">
+        android:layout_margin="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.base.mykotlintest.ProgressView
             android:id="@+id/progress"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="match_parent" />
 
-       <!-- <TextView
-            android:id="@+id/textNumber"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            app:layout_constraintLeft_toLeftOf="@+id/progress"
-            app:layout_constraintRight_toRightOf="@+id/progress"
-            app:layout_constraintTop_toTopOf="@+id/progress"
-            app:layout_constraintBottom_toBottomOf="@+id/progress"
-            android:textColor="#584F60"
-            android:textSize="20sp"/>-->
+        <!-- <TextView
+             android:id="@+id/textNumber"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:text=""
+             app:layout_constraintLeft_toLeftOf="@+id/progress"
+             app:layout_constraintRight_toRightOf="@+id/progress"
+             app:layout_constraintTop_toTopOf="@+id/progress"
+             app:layout_constraintBottom_toBottomOf="@+id/progress"
+             android:textColor="#584F60"
+             android:textSize="20sp"/>-->
 
         <com.base.mykotlintest.KeepFontTextView
             android:id="@+id/textNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#584F60"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toBottomOf="@+id/progress"
             app:layout_constraintLeft_toLeftOf="@+id/progress"
             app:layout_constraintRight_toRightOf="@+id/progress"
             app:layout_constraintTop_toTopOf="@+id/progress"
-            app:layout_constraintBottom_toBottomOf="@+id/progress"
-            android:textSize="20dp"
             tools:text="7" />
     </com.base.mykotlintest.CountDownController>
 
@@ -49,19 +51,40 @@
         android:id="@+id/buttonStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="start"/>
+        android:text="start"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/countDownController" />
 
     <Button
         android:id="@+id/buttonEnd"
-        android:layout_below="@+id/buttonStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="END"/>
+        android:layout_below="@+id/buttonStart"
+        android:text="END"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonStart" />
 
     <Button
         android:id="@+id/buttonReset"
-        android:layout_below="@+id/buttonEnd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="RESET"/>
-</RelativeLayout>
+        android:layout_below="@+id/buttonEnd"
+        android:text="RESET"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonEnd" />
+
+    <androidx.constraintlayout.helper.widget.Layer
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:layerType="hardware"
+        app:constraint_referenced_ids="buttonReset,buttonEnd,buttonStart"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
